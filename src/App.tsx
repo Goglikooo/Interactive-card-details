@@ -5,6 +5,8 @@ import CardNumber from "./assets/CardNumber";
 import HeaderBackground from "./assets/HeaderBackground";
 import SubmitButton from "./assets/SubmitButton";
 import CardName from "./assets/CardName";
+import ThankyouCard from "./assets/ThankyouCard";
+import ContinueButton from "./assets/ContinueButton";
 
 function App() {
   const [cardName, setCardName] = useState("");
@@ -12,6 +14,11 @@ function App() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [cvc, setCvc] = useState("");
+  const [isClicked, setIsClicked] = useState(false);
+  const [cvcYes, setCvcYes] = useState(false);
+  const [expDateYes, setExpDateYes] = useState(false);
+  const [allGood, setAllGood] = useState(false);
+  const [val, setVal] = useState("");
 
   return (
     <div>
@@ -23,27 +30,52 @@ function App() {
           year={year}
           cvc={cvc}
         />
-        <InputContainer>
-          <CardName
-            placeholder={"e.g. Jane Appleseed"}
-            value={cardName}
-            setCardName={setCardName}
-          />
-          <CardNumber
-            inputPlaceholder={"e.g. 1234 5678 9123 0000"}
-            setCardHolderNumberValue={setCardHolderNumberValue}
-          />
-          <Expdate
-            month={month}
-            setMonth={setMonth}
-            value={month}
-            year={year}
-            setYear={setYear}
-            setCvc={setCvc}
-            cvc={cvc}
-          />
-          <SubmitButton />
-        </InputContainer>
+
+        {allGood ? (
+          <>
+            <ThankyouContainer>
+              <ThankyouCard />
+              <ContinueButton />
+            </ThankyouContainer>
+          </>
+        ) : (
+          <InputContainer>
+            <CardName
+              placeholder={"e.g. Jane Appleseed"}
+              value={cardName}
+              setCardName={setCardName}
+            />
+            <CardNumber
+              inputPlaceholder={"e.g. 1234 5678 9123 0000"}
+              setCardHolderNumberValue={setCardHolderNumberValue}
+            />
+
+            <Expdate
+              month={month}
+              setMonth={setMonth}
+              value={month}
+              year={year}
+              setYear={setYear}
+              setCvc={setCvc}
+              cvc={cvc}
+              cvcYes={cvcYes}
+              expDateYes={expDateYes}
+            />
+
+            <SubmitButton
+              setIsClicked={setIsClicked}
+              setCvcYes={setCvcYes}
+              setExpDateYes={setExpDateYes}
+              expDateYes={expDateYes}
+              setAllGood={setAllGood}
+              cvc={cvc}
+              month={month}
+              year={year}
+              cardHolderNumberValue={cardHolderNumberValue}
+              cardName={cardName}
+            />
+          </InputContainer>
+        )}
       </Main>
     </div>
   );
@@ -58,6 +90,14 @@ const Main = styled.div`
 `;
 
 const InputContainer = styled.div`
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 25px;
+`;
+
+const ThankyouContainer = styled.div`
   display: flex;
   padding: 24px;
   flex-direction: column;

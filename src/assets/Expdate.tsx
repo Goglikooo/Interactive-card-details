@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import ErrorMessage from "./ErrorMessage";
 
 interface Props {
   month: string | number;
@@ -9,10 +10,22 @@ interface Props {
   setYear: React.Dispatch<React.SetStateAction<string>>;
   cvc: string | number;
   setCvc: React.Dispatch<React.SetStateAction<string>>;
+  cvcYes: boolean;
+  expDateYes: boolean;
 }
 
 export default function Expdate(props: Props) {
-  const { value, month, year, setMonth, setYear, cvc, setCvc } = props;
+  const {
+    value,
+    month,
+    year,
+    setMonth,
+    setYear,
+    cvc,
+    setCvc,
+    cvcYes,
+    expDateYes,
+  } = props;
 
   return (
     <Container>
@@ -23,11 +36,15 @@ export default function Expdate(props: Props) {
 
       <ExpDateInput>
         <MonthYearInput
-          type="text"
+          type="number"
           placeholder="MM"
+          min={1}
+          max={2}
           value={month}
           onChange={(e) => {
-            setMonth(e.target.value);
+            if (e.target.value.length < 3) {
+              setMonth(e.target.value);
+            }
           }}
         />
         <MonthYearInput
@@ -35,21 +52,61 @@ export default function Expdate(props: Props) {
           placeholder="YY"
           value={year}
           onChange={(e) => {
-            setYear(e.target.value);
+            if (e.target.value.length < 3) {
+              setYear(e.target.value);
+            }
           }}
         />
+
         <CVC
           type="number"
           placeholder="e.g. 123"
           value={cvc}
           onChange={(e) => {
-            setCvc(e.target.value);
+            if (e.target.value.length < 4) {
+              setCvc(e.target.value);
+            }
           }}
         />
       </ExpDateInput>
+
+      <ErrorMessageContainer>
+        {(month == "" || year == "") && expDateYes ? (
+          <ErrorMessage msg={"Can't be blank"} />
+        ) : (
+          <Hidden>Can't be blank</Hidden>
+        )}
+        {cvc == "" && cvcYes ? (
+          <ErrorMessage msg={"Can't be blank"} />
+        ) : (
+          <Hidden>Can't be blank</Hidden>
+        )}
+      </ErrorMessageContainer>
     </Container>
   );
 }
+
+const Hidden = styled.div`
+  font-family: "Space Grotesk", monospace;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  /* line-height: 15px; */
+  margin-top: 7px;
+  margin: 0;
+  padding: 0;
+  /* Red */
+
+  color: #ff5050;
+
+  visibility: hidden;
+`;
+
+const ErrorMessageContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-right: 70px;
+`;
 
 const Container = styled.div`
   display: flex;
